@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Cifrado_ED2_DiegoRamirez_DanielElias\Cifrado_ED2_DiegoRamirez_DanielElias.csproj" />
+    <ProjectReference Include="..\LibreriaRDCifrado\LibreriaRDCifrado.csproj" />
+  </ItemGroup>
+
+</Project>

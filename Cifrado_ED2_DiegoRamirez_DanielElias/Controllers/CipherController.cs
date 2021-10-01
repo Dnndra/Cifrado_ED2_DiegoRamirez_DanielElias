@@ -47,14 +47,22 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
                 var reader = new StreamReader(File.OpenReadStream());
                 string texto = reader.ReadToEnd();
                 reader.Close();
-                string codificado = cesar.encodeCesar(texto, clave);
-                byte[] bytearray = Encoding.ASCII.GetBytes(codificado);
+                string codificado = cesar.Cipher(texto, clave);
+                byte[] bytearray = Encoding.GetEncoding(28591).GetBytes(codificado);
                 return base.File(bytearray, "compressedFile / csr", nombreArchivo[0] + ".csr");
 
             }
             else if (method == "zigzag")
             {
-
+                var zigzag = new CifradoZigZag();
+                var clave = Key;
+                var nombreArchivo = File.FileName.Split('.');
+                var reader = new StreamReader(File.OpenReadStream());
+                string texto = reader.ReadToEnd();
+                reader.Close();
+                string codificado = zigzag.Cipher(texto, clave);
+                byte[] bytearray = Encoding.GetEncoding(28591).GetBytes(codificado);
+                return base.File(bytearray, "compressedFile / zz", nombreArchivo[0] + ".zz");
             }
             return null;
         }
@@ -65,6 +73,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
 
             byte[] bytes;
             var cesar = new CifradoCesar();
+            var zigzag = new CifradoZigZag();
             var clave = Key;
             var nombreArchivo = File.FileName.Split('.');
             if (nombreArchivo[1] == "csr")
@@ -78,23 +87,32 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
                     List<byte> aux = bytes.OfType<byte>().ToList();
 
                 }
-                string codificado = Encoding.ASCII.GetString(bytes);
-                string mensaje = cesar.decodeCesar(codificado, Key);
-                byte[] bytearray = Encoding.ASCII.GetBytes(mensaje);
+                string codificado = Encoding.GetEncoding(28591).GetString(bytes);
+                string mensaje = cesar.Decipher(codificado, Key);
+                byte[] bytearray = Encoding.GetEncoding(28591).GetBytes(mensaje);
 
                 return base.File(bytearray, "text/plain", nombreArchivo[0] + ".txt");
             }
             else if (nombreArchivo[1] == "zz")
             {
-                
+                using (var memory = new MemoryStream())
+                {
+                    await File.CopyToAsync(memory);
+
+
+                    bytes = memory.ToArray();
+                    List<byte> aux = bytes.OfType<byte>().ToList();
+
+                }
+                string codificado = Encoding.GetEncoding(28591).GetString(bytes);
+                string mensaje = zigzag.Decipher(codificado, Key);
+                byte[] bytearray = Encoding.GetEncoding(28591).GetBytes(mensaje);
+                return base.File(bytearray, "text/plain", nombreArchivo[0] + ".txt");
             }
+
             return null;
         }
 
-        // DELETE api/<CipherController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+
     }
 }

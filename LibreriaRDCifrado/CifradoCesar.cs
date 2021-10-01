@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 namespace LibreriaRDCifrado
 {
-    public class CifradoCesar
+    public class CifradoCesar : IEncriptador
     {
-        public string encodeCesar(string mensaje, string clave)
+        public string Cipher(string mensaje, string clave)
         {
 
             Dictionary<char, int> diccionarioOriginal = new Dictionary<char, int>();
@@ -45,7 +45,7 @@ namespace LibreriaRDCifrado
 
             return mensajecifrado;
         }
-        public string decodeCesar(string mensaje, string clave)
+        public string Decipher(string mensaje, string clave)
         {
             Dictionary<int, char> diccionarioOriginal = new Dictionary<int, char>();
             Dictionary<char, int> diccionarioclave = new Dictionary<char, int>();
