@@ -45,7 +45,7 @@ namespace LibreriaRDCifrado
 
             return mensajecifrado;
         }
-        string decodeCesar(string mensaje, string clave)
+        public string decodeCesar(string mensaje, string clave)
         {
             Dictionary<int, char> diccionarioOriginal = new Dictionary<int, char>();
             Dictionary<char, int> diccionarioclave = new Dictionary<char, int>();
