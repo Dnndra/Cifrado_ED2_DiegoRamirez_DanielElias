@@ -48,7 +48,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
                 string texto = reader.ReadToEnd();
                 reader.Close();
                 string codificado = cesar.Cipher(texto, clave);
-                byte[] bytearray = Encoding.GetEncoding(28591).GetBytes(codificado);
+                byte[] bytearray = Encoding.UTF8.GetBytes(codificado);
                 return base.File(bytearray, "compressedFile / csr", nombreArchivo[0] + ".csr");
 
             }
@@ -61,7 +61,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
                 string texto = reader.ReadToEnd();
                 reader.Close();
                 string codificado = zigzag.Cipher(texto, clave);
-                byte[] bytearray = Encoding.GetEncoding(28591).GetBytes(codificado);
+                byte[] bytearray = Encoding.UTF8.GetBytes(codificado);
                 return base.File(bytearray, "compressedFile / zz", nombreArchivo[0] + ".zz");
             }
             return null;
@@ -87,9 +87,9 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
                     List<byte> aux = bytes.OfType<byte>().ToList();
 
                 }
-                string codificado = Encoding.GetEncoding(28591).GetString(bytes);
+                string codificado = Encoding.UTF8.GetString(bytes);
                 string mensaje = cesar.Decipher(codificado, Key);
-                byte[] bytearray = Encoding.GetEncoding(28591).GetBytes(mensaje);
+                byte[] bytearray = Encoding.UTF8.GetBytes(mensaje);
 
                 return base.File(bytearray, "text/plain", nombreArchivo[0] + ".txt");
             }
@@ -104,9 +104,9 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
                     List<byte> aux = bytes.OfType<byte>().ToList();
 
                 }
-                string codificado = Encoding.GetEncoding(28591).GetString(bytes);
+                string codificado = Encoding.UTF8.GetString(bytes);
                 string mensaje = zigzag.Decipher(codificado, Key);
-                byte[] bytearray = Encoding.GetEncoding(28591).GetBytes(mensaje);
+                byte[] bytearray = Encoding.UTF8.GetBytes(mensaje);
                 return base.File(bytearray, "text/plain", nombreArchivo[0] + ".txt");
             }
 
