@@ -9,41 +9,41 @@ namespace LibreriaRDCifrado
         public string Cipher(string mensaje, string clave)
         {
             //int rail, string plaintext
-            string plainText = mensaje;
-            int rail;
+            string MensajeOriginal = mensaje;
+            int fila;
             try
             {
-               rail = Convert.ToInt32(clave);
+               fila = Convert.ToInt32(clave);
             }
             catch
             {
                 return null;
             }
             
-            List<string> railFence = new List<string>();
-            for (int i = 0; i < rail; i++)
+            List<string> zigzag = new List<string>();
+            for (int i = 0; i < fila; i++)
             {
-                railFence.Add("");
+                zigzag.Add("");
             }
 
-            int number = 0;
+            int n = 0;
             int x = 1;
-            foreach (char c in plainText)
+            foreach (char c in MensajeOriginal)
             {
-                if (number + x == rail)
+                if (n + x == fila)
                 {
                     x = -1;
                 }
-                else if (number + x == -1)
+                else if (n + x == -1)
                 {
                     x = 1;
                 }
-                railFence[number] += c;
-                number += x;
+                zigzag[n] += c;
+                n += x;
             }
 
             string buffer = "";
-            foreach (string s in railFence)
+            foreach (string s in zigzag)
             {
                 buffer += s;
             }
