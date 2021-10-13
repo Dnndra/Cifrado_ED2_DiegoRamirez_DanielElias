@@ -9,12 +9,20 @@ namespace ConsolaCifrados
         {
             var cesar = new CifradoCesar();
             var zigzag = new CifradoZigZag();
-            var SDES = new LibreriaRDCifrado.SDES();
+            var SDES = new SDES();
             string mensajeOriginal = "Marco Antonio Solis";
             string claveCesar = "pinula";
             int claveZigzag = 5;
 
-            Console.WriteLine(SDES.Cypher("364"));
+            string llaveSDES = "50";
+
+
+
+            Console.WriteLine(SDES.GenerarLlave(llaveSDES, null, null));
+
+
+
+
             Console.WriteLine("El mensaje original es: " + mensajeOriginal + ", la clave es: " + claveCesar);
 
             Console.WriteLine("El codificado por Cesar es: " + cesar.Cipher(mensajeOriginal, claveCesar));

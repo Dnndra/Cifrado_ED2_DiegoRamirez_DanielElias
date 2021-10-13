@@ -69,6 +69,11 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
             return null;
         }
 
+        //public int[] P10;
+        //public int[] P8;
+        //public int[] P8;
+
+
         [HttpPost("sdes/cipher/{name}")]
         
           public async Task<FileResult> CipherSDES([FromRoute] string name, [FromForm] IFormFile File)
@@ -90,7 +95,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
 
              return base.File(bytes, "text / plain", name + ".txt");
 
-        }
+          }
 
 
 
