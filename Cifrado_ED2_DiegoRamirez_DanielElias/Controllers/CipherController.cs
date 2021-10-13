@@ -37,8 +37,9 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
 
         // POST api/<CipherController>
         [HttpPost("cipher/{method}")]
-        public FileResult Cipher([FromRoute] string method, [FromForm] IFormFile File, [FromForm] string Key)
+        public async Task<FileResult> Cipher([FromRoute] string method, [FromForm] IFormFile File, [FromForm] string Key)
         {
+            byte[] bytes;
             if (method == "cesar")
             {
                 var cesar = new CifradoCesar();
@@ -64,8 +65,41 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
                 byte[] bytearray = Encoding.UTF8.GetBytes(codificado);
                 return base.File(bytearray, "compressedFile / zz", nombreArchivo[0] + ".zz");
             }
+           
             return null;
         }
+
+        [HttpPost("sdes/cipher/{name}")]
+        
+          public async Task<FileResult> CipherSDES([FromRoute] string name, [FromForm] IFormFile File)
+        {
+            byte[] bytes;
+           
+
+            using (var memory = new MemoryStream())
+            {
+                await File.CopyToAsync(memory);
+
+            
+                bytes = memory.ToArray();
+                List<byte> aux = bytes.OfType<byte>().ToList();
+             
+             }
+
+
+
+             return base.File(bytes, "text / plain", name + ".txt");
+
+        }
+
+
+
+
+
+
+
+
+
 
         [HttpPost("decipher")]
         public async Task<FileResult> DecipherAsync([FromForm] IFormFile File, [FromForm] string Key)
