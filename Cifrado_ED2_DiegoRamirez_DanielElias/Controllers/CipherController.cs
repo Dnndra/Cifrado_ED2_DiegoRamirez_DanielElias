@@ -90,14 +90,39 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
                 List<byte> aux = bytes.OfType<byte>().ToList();
              
              }
+            var SDES = new SDES();
+
+           List<byte> final= SDES.Cypher("50",bytes, null, null, null, null);
 
 
-
-             return base.File(bytes, "text / plain", name + ".txt");
+            return base.File(final.ToArray(), "text / plain", name + ".txt");
 
           }
 
+        [HttpPost("sdes/decipher/{name}")]
 
+        public async Task<FileResult> DecipherSDES([FromRoute] string name, [FromForm] IFormFile File)
+        {
+            byte[] bytes;
+
+
+            using (var memory = new MemoryStream())
+            {
+                await File.CopyToAsync(memory);
+
+
+                bytes = memory.ToArray();
+                List<byte> aux = bytes.OfType<byte>().ToList();
+
+            }
+            var SDES = new SDES();
+
+            List<byte> final = SDES.Decypher("50", bytes, null, null, null, null);
+
+     
+            return base.File(final.ToArray(), "text / plain", name + ".txt");
+
+        }
 
 
 
