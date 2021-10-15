@@ -12,6 +12,7 @@ using System.Text.Json;
 using System.Web;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Reflection;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -73,11 +74,104 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
         //public int[] P8;
         //public int[] P8;
 
+        void ObtenerPermutaciones (int[] P10, int[] P8, int[] P4, int[] EP, int[] IP, int[] IP_1)
+        {
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\Permutations.txt");
+            var reader = new StreamReader(path);
+            string linea = reader.ReadLine();
+            string[]PACTUAL = linea.Split(',');
+
+            foreach (string s in PACTUAL)
+            {
+                int num = Convert.ToInt32(s);
+                P10.Append(num);
+            }
+
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            foreach (string s in PACTUAL)
+            {
+                int num = Convert.ToInt32(s);
+                P8.Append(num);
+            }
+
+        }
+        
+        public static int[] P10;
+        public static int[] P8;
+        public static int[] P4;
+        public static int[] EP;
+        public static int[] IP;
+        public static int[] IP_1;
+
+
+
+
+
+
 
         [HttpPost("sdes/cipher/{name}")]
         
-          public async Task<FileResult> CipherSDES([FromRoute] string name, [FromForm] IFormFile File)
+          public async Task<FileResult> CipherSDES([FromRoute] string name, [FromForm] IFormFile File, [FromForm] string Key)
         {
+
+            //LEER PERMUTACIONES
+            int[] P10 = new int[10];
+            int[] P8 = new int[8];
+            int[] P4 = new int[4];
+            int[] EP = new int[8];
+            int[] IP = new int[8];
+            int[] IP_1 = new int[8];
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\Permutations.txt");
+            var reader = new StreamReader(path);
+
+            string linea = reader.ReadLine();
+            string[] PACTUAL = linea.Split(',');
+
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                P10[i] = num;
+            }
+
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                P8[i] = num;
+            }
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                P4[i] = num;
+            }
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                EP[i] = num;
+            }
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                IP[i] = num;
+            }
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                IP_1[i] = num;
+            }
+            //fin leer permutaciones
+
+
             byte[] bytes;
            
 
@@ -92,7 +186,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
              }
             var SDES = new SDES();
 
-           List<byte> final= SDES.Cypher("50",bytes, null, null, null, null);
+           List<byte> final= SDES.Cypher(Key ,bytes, null, null, null, null);
 
 
             return base.File(final.ToArray(), "text / plain", name + ".txt");
@@ -101,8 +195,63 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
 
         [HttpPost("sdes/decipher/{name}")]
 
-        public async Task<FileResult> DecipherSDES([FromRoute] string name, [FromForm] IFormFile File)
+        public async Task<FileResult> DecipherSDES([FromRoute] string name, [FromForm] IFormFile File, [FromForm] string Key)
         {
+            //LEER PERMUTACIONES
+            int[] P10 = new int[10];
+            int[] P8 = new int[8];
+            int[] P4 = new int[4];
+            int[] EP = new int[8];
+            int[] IP = new int[8];
+            int[] IP_1 = new int[8];
+            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\Permutations.txt");
+            var reader = new StreamReader(path);
+
+            string linea = reader.ReadLine();
+            string[] PACTUAL = linea.Split(',');
+
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                P10[i] = num;
+            }
+
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                P8[i] = num;
+            }
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                P4[i] = num;
+            }
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                EP[i] = num;
+            }
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                IP[i] = num;
+            }
+            linea = reader.ReadLine();
+            PACTUAL = linea.Split(',');
+            for (int i = 0; i < PACTUAL.Length; i++)
+            {
+                int num = Convert.ToInt32(PACTUAL[i]);
+                IP_1[i] = num;
+            }
+            //fin leer permutaciones
             byte[] bytes;
 
 
@@ -117,7 +266,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
             }
             var SDES = new SDES();
 
-            List<byte> final = SDES.Decypher("50", bytes, null, null, null, null);
+            List<byte> final = SDES.Decypher(Key, bytes, null, null, null, null);
 
      
             return base.File(final.ToArray(), "text / plain", name + ".txt");
