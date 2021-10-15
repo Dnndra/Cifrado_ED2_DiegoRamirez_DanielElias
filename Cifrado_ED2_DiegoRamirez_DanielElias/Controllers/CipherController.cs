@@ -122,7 +122,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
             int[] EP = new int[8];
             int[] IP = new int[8];
             int[] IP_1 = new int[8];
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\Permutations.txt");
+            string path = Path.Combine(Environment.CurrentDirectory, @"Data\Permutations.txt");
             var reader = new StreamReader(path);
 
             string linea = reader.ReadLine();
@@ -186,7 +186,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
              }
             var SDES = new SDES();
 
-           List<byte> final= SDES.Cypher(Key ,bytes, null, null, null, null);
+           List<byte> final= SDES.Cypher(Key ,bytes, P4,EP,IP,IP_1,P10,P8);
 
 
             return base.File(final.ToArray(), "text / plain", name + ".txt");
@@ -204,7 +204,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
             int[] EP = new int[8];
             int[] IP = new int[8];
             int[] IP_1 = new int[8];
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\Permutations.txt");
+            string path = Path.Combine(Environment.CurrentDirectory, @"Data\Permutations.txt");
             var reader = new StreamReader(path);
 
             string linea = reader.ReadLine();
@@ -266,7 +266,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
             }
             var SDES = new SDES();
 
-            List<byte> final = SDES.Decypher(Key, bytes, null, null, null, null);
+            List<byte> final = SDES.Decypher(Key, bytes, P4, EP, IP, IP_1,P10,P8);
 
      
             return base.File(final.ToArray(), "text / plain", name + ".txt");

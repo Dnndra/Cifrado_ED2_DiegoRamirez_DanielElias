@@ -136,12 +136,12 @@ namespace LibreriaRDCifrado
                     key = llaveEnBinario;
                 }
                 //Hacer P10
-                int[] p10 = { 3, 5, 2, 7, 4, 10, 1, 9, 8, 6 };
+              
                 string llaveConP10 = "";
                 int posicionP10 = 0;
                 for (int i = 0; i < key.Length; i++)
                 {
-                    posicionP10 = p10[i];
+                    posicionP10 = P10[i];
                     llaveConP10 += key[posicionP10-1].ToString();
                 }
                 //Hacer split y LS-1
@@ -151,8 +151,8 @@ namespace LibreriaRDCifrado
                 LSderecha = LeftShift1(LSderecha);
                 //HACER P8 Y GENERAR K1
                 string llaveConP8 = LSizquierda + LSderecha;
-                int[] p8 = { 6, 3, 7, 4, 8, 5, 10, 9 };
-                llaveConP8 =Permutacion8(p8, llaveConP8);
+        
+                llaveConP8 =Permutacion8(P8, llaveConP8);
                 //ALMACENAR K1
                 llaves[0] = llaveConP8;
                 //HACER LEFTSHIFT 2
@@ -162,7 +162,7 @@ namespace LibreriaRDCifrado
                 LSderecha = LeftShift1(LSderecha);
                 llaveConP8 = LSizquierda + LSderecha;
                 //HACER P8 Y ALMACENAR K2
-                llaves[1] = Permutacion8(p8, llaveConP8);
+                llaves[1] = Permutacion8(P8, llaveConP8);
 
 
 
@@ -171,117 +171,9 @@ namespace LibreriaRDCifrado
             }
         }
 
-        public List<byte> Cypher(string llave, byte[] mensaje, int[] IPQ, int[] IP1Q, int[] EPQ, int[] P4Q  )
+        public List<byte> Cypher(string llave, byte[] mensaje, int[] P4Q, int[] EPQ , int[] IPQ, int[] IP1Q, int[] P10, int[] P8)
         {
-            string[,] So = { { "01","00","11","10"},
-                             { "11","10","01","00"},
-                             { "00","10","01","11"},
-                             { "11","01","11","10"} };
 
-            string[,] S1 = { { "00","01","10","11"},
-                             { "10","00","01","11"},
-                             { "11","00","01","00"},
-                             { "10","01","00","11"} };
-
-            List<byte> Mensajecifrado = new List<byte>(); 
-           
-            string[] keys = GenerarLlave(llave, null, null);
-            int[] epe = { 4, 1, 2, 3, 2, 3, 4, 1 };
-            int[] IPE = { 2, 6, 3, 1, 4, 8, 5, 7 };
-            int[] IPE1 = { 4, 1, 3, 5, 7, 2, 8, 6 };
-            int[] PE4 = { 2, 4, 3, 1 };
-            for  (int  i=0; i <mensaje.Length; i++)
-            {
-
-
-
-                string Charenbinario = Convert.ToString(mensaje[i], 2);
-               
-                string caracterenbinario = "";
-                if (Charenbinario.Length < 8)
-                {
-                    string aux = "";
-                    for (int m = 0; m < 8 - Charenbinario.Length; m++)
-                    {
-
-                        aux += "0";
-
-                    }
-
-                    caracterenbinario += aux + Charenbinario;
-                    aux = "";
-                }
-                else
-                {
-                    caracterenbinario = Charenbinario;
-                }
-                //ESTE SE QUEDA
-                string MensajeIP =  IP(IPE,caracterenbinario);
-
-                //ESTE SE QUEDA
-                string IPizquierda =MensajeIP.Substring(0,4);
-
-                string IPderecha = MensajeIP.Substring(4,4);
-
-                string MensajeEp = EP(epe, IPderecha);
-                string suma1 = Suma(MensajeEp, keys[0]);
-
-                //se pueden volar
-                string suma1Izquierda = suma1.Substring(0, 4);
-                string suma1derecha = suma1.Substring(4, 4);
-               
-                string combinacion = suma1Izquierda.Substring(0, 1) + suma1Izquierda.Substring(3, 1);
-                string fila = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma1Izquierda.Substring(1, 1)+suma1Izquierda.Substring(2, 1);
-                string col = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-
-                combinacion = suma1derecha.Substring(0, 1) + suma1derecha.Substring(3, 1); 
-                string fila1 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma1derecha.Substring(1, 1) + suma1derecha.Substring(2, 1);
-               string col2 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                string Scombinada = So[Convert.ToInt32(fila), Convert.ToInt32(col)] + S1[Convert.ToInt32(fila1), Convert.ToInt32(col2)];
-
-                string mensajeP4 = P4(PE4, Scombinada);
-
-                string suma2 = Suma(mensajeP4, IPizquierda);
-
-                string mensajesw = IPderecha + suma2;
-
-                string mensajeswizquierda = mensajesw.Substring(0, 4);
-                string mensajeswderecha = mensajesw.Substring(4, 4);
-
-                string MensaEP2 = EP(epe, mensajeswderecha);
-
-                string suma3 = Suma(MensaEP2, keys[1]);
-
-                string suma3izquierda = suma3.Substring(0, 4);
-                string suma3derecha = suma3.Substring(4, 4);
-                combinacion = suma3izquierda.Substring(0, 1) + suma3izquierda.Substring(3, 1);
-                fila = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma3izquierda.Substring(1, 1) + suma3izquierda.Substring(2, 1);
-                col = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma3derecha.Substring(0, 1) + suma3derecha.Substring(3, 1);
-
-                fila1 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma3derecha.Substring(1, 1) + suma3derecha.Substring(2, 1);
-                col2 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                string S2combinado = So[Convert.ToInt32(fila), Convert.ToInt32(col)] + S1[Convert.ToInt32(fila1), Convert.ToInt32(col2)];
-
-                string mensajeP42 = P4(PE4, S2combinado);
-
-                string suma4 = Suma(mensajeswizquierda, mensajeP42);
-
-                string mensajepi = IP1(IPE1, suma4 + mensajeswderecha);
-
-                int mensajefinal = Convert.ToInt32(mensajepi, 2);
-                Mensajecifrado.Add((byte)mensajefinal);
-            }
-
-            
-            return Mensajecifrado; 
-        }
-        public List<byte> Decypher(string llave, byte[] mensaje, int[] IPQ, int[] IP1Q, int[] EPQ, int[] P4Q)
-        {
             string[,] So = { { "01","00","11","10"},
                              { "11","10","01","00"},
                              { "00","10","01","11"},
@@ -294,11 +186,8 @@ namespace LibreriaRDCifrado
 
             List<byte> Mensajecifrado = new List<byte>();
 
-            string[] keys = GenerarLlave(llave, null, null);
-            int[] epe = { 4, 1, 2, 3, 2, 3, 4, 1 };
-            int[] IPE = { 2, 6, 3, 1, 4, 8, 5, 7 };
-            int[] IPE1 = { 4, 1, 3, 5, 7, 2, 8, 6 };
-            int[] PE4 = { 2, 4, 3, 1 };
+            string[] keys = GenerarLlave(llave, P10, P8);
+
             for (int i = 0; i < mensaje.Length; i++)
             {
 
@@ -324,13 +213,116 @@ namespace LibreriaRDCifrado
                 {
                     caracterenbinario = Charenbinario;
                 }
-                string MensajeIP = IP(IPE, caracterenbinario);
+                string MensajeIP = IP(IPQ, caracterenbinario);
 
                 string IPizquierda = MensajeIP.Substring(0, 4);
 
                 string IPderecha = MensajeIP.Substring(4, 4);
 
-                string MensajeEp = EP(epe, IPderecha);
+                string MensajeEp = EP(EPQ, IPderecha);
+                string suma1 = Suma(MensajeEp, keys[0]);
+
+                string suma1Izquierda = suma1.Substring(0, 4);
+                string suma1derecha = suma1.Substring(4, 4);
+
+                string combinacion = suma1Izquierda.Substring(0, 1) + suma1Izquierda.Substring(3, 1);
+                string fila = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                combinacion = suma1Izquierda.Substring(1, 1) + suma1Izquierda.Substring(2, 1);
+                string col = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+
+                combinacion = suma1derecha.Substring(0, 1) + suma1derecha.Substring(3, 1);
+                string fila1 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                combinacion = suma1derecha.Substring(1, 1) + suma1derecha.Substring(2, 1);
+                string col2 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                string Scombinada = So[Convert.ToInt32(fila), Convert.ToInt32(col)] + S1[Convert.ToInt32(fila1), Convert.ToInt32(col2)];
+
+                string mensajeP4 = P4(P4Q, Scombinada);
+
+                string suma2 = Suma(mensajeP4, IPizquierda);
+
+                string mensajesw = IPderecha + suma2;
+
+                string mensajeswizquierda = mensajesw.Substring(0, 4);
+                string mensajeswderecha = mensajesw.Substring(4, 4);
+
+                string MensaEP2 = EP(EPQ, mensajeswderecha);
+
+                string suma3 = Suma(MensaEP2, keys[1]);
+
+                string suma3izquierda = suma3.Substring(0, 4);
+                string suma3derecha = suma3.Substring(4, 4);
+                combinacion = suma3izquierda.Substring(0, 1) + suma3izquierda.Substring(3, 1);
+                fila = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                combinacion = suma3izquierda.Substring(1, 1) + suma3izquierda.Substring(2, 1);
+                col = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                combinacion = suma3derecha.Substring(0, 1) + suma3derecha.Substring(3, 1);
+
+                fila1 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                combinacion = suma3derecha.Substring(1, 1) + suma3derecha.Substring(2, 1);
+                col2 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                string S2combinado = So[Convert.ToInt32(fila), Convert.ToInt32(col)] + S1[Convert.ToInt32(fila1), Convert.ToInt32(col2)];
+
+                string mensajeP42 = P4(P4Q, S2combinado);
+
+                string suma4 = Suma(mensajeswizquierda, mensajeP42);
+
+                string mensajepi = IP1(IP1Q, suma4 + mensajeswderecha);
+
+                int mensajefinal = Convert.ToInt32(mensajepi, 2);
+                Mensajecifrado.Add((byte)mensajefinal);
+            }
+
+
+            return Mensajecifrado;
+        }
+        public List<byte> Decypher(string llave, byte[] mensaje, int[] P4Q, int[] EPQ, int[] IPQ, int[] IP1Q, int[] P10, int[] P8)
+        {
+            string[,] So = { { "01","00","11","10"},
+                             { "11","10","01","00"},
+                             { "00","10","01","11"},
+                             { "11","01","11","10"} };
+
+            string[,] S1 = { { "00","01","10","11"},
+                             { "10","00","01","11"},
+                             { "11","00","01","00"},
+                             { "10","01","00","11"} };
+
+            List<byte> Mensajecifrado = new List<byte>();
+
+            string[] keys = GenerarLlave(llave, P10, P8);
+          
+            for (int i = 0; i < mensaje.Length; i++)
+            {
+
+
+
+                string Charenbinario = Convert.ToString(mensaje[i], 2);
+
+                string caracterenbinario = "";
+                if (Charenbinario.Length < 8)
+                {
+                    string aux = "";
+                    for (int m = 0; m < 8 - Charenbinario.Length; m++)
+                    {
+
+                        aux += "0";
+
+                    }
+
+                    caracterenbinario += aux + Charenbinario;
+                    aux = "";
+                }
+                else
+                {
+                    caracterenbinario = Charenbinario;
+                }
+                string MensajeIP = IP(IPQ, caracterenbinario);
+
+                string IPizquierda = MensajeIP.Substring(0, 4);
+
+                string IPderecha = MensajeIP.Substring(4, 4);
+
+                string MensajeEp = EP(EPQ, IPderecha);
                 string suma1 = Suma(MensajeEp, keys[1]);
 
                 string suma1Izquierda = suma1.Substring(0, 4);
@@ -347,7 +339,7 @@ namespace LibreriaRDCifrado
                 string col2 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
                 string Scombinada = So[Convert.ToInt32(fila), Convert.ToInt32(col)] + S1[Convert.ToInt32(fila1), Convert.ToInt32(col2)];
 
-                string mensajeP4 = P4(PE4, Scombinada);
+                string mensajeP4 = P4(P4Q, Scombinada);
 
                 string suma2 = Suma(mensajeP4, IPizquierda);
 
@@ -356,7 +348,7 @@ namespace LibreriaRDCifrado
                 string mensajeswizquierda = mensajesw.Substring(0, 4);
                 string mensajeswderecha = mensajesw.Substring(4, 4);
 
-                string MensaEP2 = EP(epe, mensajeswderecha);
+                string MensaEP2 = EP(EPQ, mensajeswderecha);
 
                 string suma3 = Suma(MensaEP2, keys[0]);
 
@@ -373,11 +365,11 @@ namespace LibreriaRDCifrado
                 col2 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
                 string S2combinado = So[Convert.ToInt32(fila), Convert.ToInt32(col)] + S1[Convert.ToInt32(fila1), Convert.ToInt32(col2)];
 
-                string mensajeP42 = P4(PE4, S2combinado);
+                string mensajeP42 = P4(P4Q, S2combinado);
 
                 string suma4 = Suma(mensajeswizquierda, mensajeP42);
 
-                string mensajepi = IP1(IPE1, suma4 + mensajeswderecha);
+                string mensajepi = IP1(IP1Q, suma4 + mensajeswderecha);
 
                 int mensajefinal = Convert.ToInt32(mensajepi, 2);
                 Mensajecifrado.Add((byte)mensajefinal);
