@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using LibreriaRDCifrado;
 
 namespace LibreriaRDCifrado
 {
-   public  class SDES
+    public  class SDES
     {
 
         public string LeftShift1(string cadena)
@@ -28,6 +25,7 @@ namespace LibreriaRDCifrado
             return shifted;
         }
      
+      
         public string Permutacion8(int[] P8, string cadena)
         {
             string salida = "";
@@ -213,60 +211,83 @@ namespace LibreriaRDCifrado
                 {
                     caracterenbinario = Charenbinario;
                 }
+
+                //primer permutacion
                 string MensajeIP = IP(IPQ, caracterenbinario);
+              
+                //separacion izquierda 1
+                string izquierda = MensajeIP.Substring(0, 4);
+                //separacion derecha 1
+                string derecha = MensajeIP.Substring(4, 4);
 
-                string IPizquierda = MensajeIP.Substring(0, 4);
+                //EXPANDIR Y PERMUTAR
+                string MensajeEp = EP(EPQ, derecha);
 
-                string IPderecha = MensajeIP.Substring(4, 4);
 
-                string MensajeEp = EP(EPQ, IPderecha);
+                //suma
                 string suma1 = Suma(MensajeEp, keys[0]);
-
+                //suma izquierda
                 string suma1Izquierda = suma1.Substring(0, 4);
+                //suma derecha
                 string suma1derecha = suma1.Substring(4, 4);
 
-                string combinacion = suma1Izquierda.Substring(0, 1) + suma1Izquierda.Substring(3, 1);
-                string fila = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                //FILAS Y COLUMNAS
+                string  combinacion = suma1Izquierda.Substring(0, 1) + suma1Izquierda.Substring(3, 1);
+
+                int fila = Convert.ToInt32(combinacion, 2);
+               
                 combinacion = suma1Izquierda.Substring(1, 1) + suma1Izquierda.Substring(2, 1);
-                string col = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-
+                int col = Convert.ToInt32(combinacion, 2);
+            
                 combinacion = suma1derecha.Substring(0, 1) + suma1derecha.Substring(3, 1);
-                string fila1 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                int fila1 = Convert.ToInt32(combinacion, 2);
+              
                 combinacion = suma1derecha.Substring(1, 1) + suma1derecha.Substring(2, 1);
-                string col2 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                string Scombinada = So[Convert.ToInt32(fila), Convert.ToInt32(col)] + S1[Convert.ToInt32(fila1), Convert.ToInt32(col2)];
+                int col2 = Convert.ToInt32(combinacion, 2);
+                string Scombinada = So[fila, col] + S1[fila1, col2];
 
+                //PERMTUACION 4
                 string mensajeP4 = P4(P4Q, Scombinada);
+                //SUMA
+                suma1 = Suma(mensajeP4, izquierda);
+               
+                //SWAP MENSAJE
+                string mensajesw = derecha + suma1;
 
-                string suma2 = Suma(mensajeP4, IPizquierda);
+                //SEPARACION IZQUIERDA, DERCHA
+                 izquierda = mensajesw.Substring(0, 4);
+                 derecha = mensajesw.Substring(4, 4);
 
-                string mensajesw = IPderecha + suma2;
 
-                string mensajeswizquierda = mensajesw.Substring(0, 4);
-                string mensajeswderecha = mensajesw.Substring(4, 4);
+                string MensaEP2 = EP(EPQ, derecha);
 
-                string MensaEP2 = EP(EPQ, mensajeswderecha);
+                //SUMA
+                suma1 = Suma(MensaEP2, keys[1]);
 
-                string suma3 = Suma(MensaEP2, keys[1]);
+                // SEPARADOR DE SUMA
+                suma1Izquierda = suma1.Substring(0, 4);
+                suma1derecha = suma1.Substring(4, 4);
 
-                string suma3izquierda = suma3.Substring(0, 4);
-                string suma3derecha = suma3.Substring(4, 4);
-                combinacion = suma3izquierda.Substring(0, 1) + suma3izquierda.Substring(3, 1);
-                fila = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma3izquierda.Substring(1, 1) + suma3izquierda.Substring(2, 1);
-                col = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma3derecha.Substring(0, 1) + suma3derecha.Substring(3, 1);
+                //FILAS Y COLUMNAS
+                combinacion = suma1Izquierda.Substring(0, 1) + suma1Izquierda.Substring(3, 1);
+                fila = Convert.ToInt32(combinacion,  2);
+                combinacion = suma1Izquierda.Substring(1, 1) + suma1Izquierda.Substring(2, 1);
+                col = Convert.ToInt32(combinacion,  2);
+                combinacion = suma1derecha.Substring(0, 1) + suma1derecha.Substring(3, 1);
 
-                fila1 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma3derecha.Substring(1, 1) + suma3derecha.Substring(2, 1);
-                col2 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                string S2combinado = So[Convert.ToInt32(fila), Convert.ToInt32(col)] + S1[Convert.ToInt32(fila1), Convert.ToInt32(col2)];
+                fila1 = Convert.ToInt32(combinacion,  2);
+                combinacion = suma1derecha.Substring(1, 1) + suma1derecha.Substring(2, 1);
+                col2 = Convert.ToInt32(combinacion, 2);
+               
+                Scombinada = So[fila, col] + S1[fila1, col2];
 
-                string mensajeP42 = P4(P4Q, S2combinado);
+                string mensajeP42 = P4(P4Q, Scombinada);
 
-                string suma4 = Suma(mensajeswizquierda, mensajeP42);
+                // SUMA1 
+                suma1 = Suma(izquierda, mensajeP42);
 
-                string mensajepi = IP1(IP1Q, suma4 + mensajeswderecha);
+                //PERMUTACION IP-1
+                string mensajepi = IP1(IP1Q, suma1 + derecha);
 
                 int mensajefinal = Convert.ToInt32(mensajepi, 2);
                 Mensajecifrado.Add((byte)mensajefinal);
@@ -290,7 +311,7 @@ namespace LibreriaRDCifrado
             List<byte> Mensajecifrado = new List<byte>();
 
             string[] keys = GenerarLlave(llave, P10, P8);
-          
+
             for (int i = 0; i < mensaje.Length; i++)
             {
 
@@ -316,60 +337,83 @@ namespace LibreriaRDCifrado
                 {
                     caracterenbinario = Charenbinario;
                 }
+
+                //primer permutacion
                 string MensajeIP = IP(IPQ, caracterenbinario);
 
-                string IPizquierda = MensajeIP.Substring(0, 4);
+                //separacion izquierda 1
+                string izquierda = MensajeIP.Substring(0, 4);
+                //separacion derecha 1
+                string derecha = MensajeIP.Substring(4, 4);
 
-                string IPderecha = MensajeIP.Substring(4, 4);
+                //EXPANDIR Y PERMUTAR
+                string MensajeEp = EP(EPQ, derecha);
 
-                string MensajeEp = EP(EPQ, IPderecha);
+
+                //suma
                 string suma1 = Suma(MensajeEp, keys[1]);
-
+                //suma izquierda
                 string suma1Izquierda = suma1.Substring(0, 4);
+                //suma derecha
                 string suma1derecha = suma1.Substring(4, 4);
 
+                //FILAS Y COLUMNAS
                 string combinacion = suma1Izquierda.Substring(0, 1) + suma1Izquierda.Substring(3, 1);
-                string fila = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+
+                int fila = Convert.ToInt32(combinacion, 2);
+
                 combinacion = suma1Izquierda.Substring(1, 1) + suma1Izquierda.Substring(2, 1);
-                string col = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                int col = Convert.ToInt32(combinacion, 2);
 
                 combinacion = suma1derecha.Substring(0, 1) + suma1derecha.Substring(3, 1);
-                string fila1 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
+                int fila1 = Convert.ToInt32(combinacion, 2);
+
                 combinacion = suma1derecha.Substring(1, 1) + suma1derecha.Substring(2, 1);
-                string col2 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                string Scombinada = So[Convert.ToInt32(fila), Convert.ToInt32(col)] + S1[Convert.ToInt32(fila1), Convert.ToInt32(col2)];
+                int col2 = Convert.ToInt32(combinacion, 2);
+                string Scombinada = So[fila, col] + S1[fila1, col2];
 
+                //PERMTUACION 4
                 string mensajeP4 = P4(P4Q, Scombinada);
+                //SUMA
+                suma1 = Suma(mensajeP4, izquierda);
 
-                string suma2 = Suma(mensajeP4, IPizquierda);
+                //SWAP MENSAJE
+                string mensajesw = derecha + suma1;
 
-                string mensajesw = IPderecha + suma2;
+                //SEPARACION IZQUIERDA, DERCHA
+                izquierda = mensajesw.Substring(0, 4);
+                derecha = mensajesw.Substring(4, 4);
 
-                string mensajeswizquierda = mensajesw.Substring(0, 4);
-                string mensajeswderecha = mensajesw.Substring(4, 4);
 
-                string MensaEP2 = EP(EPQ, mensajeswderecha);
+                string MensaEP2 = EP(EPQ, derecha);
 
-                string suma3 = Suma(MensaEP2, keys[0]);
+                //SUMA
+                suma1 = Suma(MensaEP2, keys[0]);
 
-                string suma3izquierda = suma3.Substring(0, 4);
-                string suma3derecha = suma3.Substring(4, 4);
-                combinacion = suma3izquierda.Substring(0, 1) + suma3izquierda.Substring(3, 1);
-                fila = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma3izquierda.Substring(1, 1) + suma3izquierda.Substring(2, 1);
-                col = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma3derecha.Substring(0, 1) + suma3derecha.Substring(3, 1);
+                // SEPARADOR DE SUMA
+                suma1Izquierda = suma1.Substring(0, 4);
+                suma1derecha = suma1.Substring(4, 4);
 
-                fila1 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                combinacion = suma3derecha.Substring(1, 1) + suma3derecha.Substring(2, 1);
-                col2 = Convert.ToString(Convert.ToInt32(combinacion, 2), 10);
-                string S2combinado = So[Convert.ToInt32(fila), Convert.ToInt32(col)] + S1[Convert.ToInt32(fila1), Convert.ToInt32(col2)];
+                //FILAS Y COLUMNAS
+                combinacion = suma1Izquierda.Substring(0, 1) + suma1Izquierda.Substring(3, 1);
+                fila = Convert.ToInt32(combinacion, 2);
+                combinacion = suma1Izquierda.Substring(1, 1) + suma1Izquierda.Substring(2, 1);
+                col = Convert.ToInt32(combinacion, 2);
+                combinacion = suma1derecha.Substring(0, 1) + suma1derecha.Substring(3, 1);
 
-                string mensajeP42 = P4(P4Q, S2combinado);
+                fila1 = Convert.ToInt32(combinacion, 2);
+                combinacion = suma1derecha.Substring(1, 1) + suma1derecha.Substring(2, 1);
+                col2 = Convert.ToInt32(combinacion, 2);
 
-                string suma4 = Suma(mensajeswizquierda, mensajeP42);
+                Scombinada = So[fila, col] + S1[fila1, col2];
 
-                string mensajepi = IP1(IP1Q, suma4 + mensajeswderecha);
+                string mensajeP42 = P4(P4Q, Scombinada);
+
+                // SUMA1 
+                suma1 = Suma(izquierda, mensajeP42);
+
+                //PERMUTACION IP-1
+                string mensajepi = IP1(IP1Q, suma1 + derecha);
 
                 int mensajefinal = Convert.ToInt32(mensajepi, 2);
                 Mensajecifrado.Add((byte)mensajefinal);

@@ -40,7 +40,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
         [HttpPost("cipher/{method}")]
         public async Task<FileResult> Cipher([FromRoute] string method, [FromForm] IFormFile File, [FromForm] string Key)
         {
-            byte[] bytes;
+         
             if (method == "cesar")
             {
                 var cesar = new CifradoCesar();
@@ -70,45 +70,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
             return null;
         }
 
-        //public int[] P10;
-        //public int[] P8;
-        //public int[] P8;
-
-        void ObtenerPermutaciones (int[] P10, int[] P8, int[] P4, int[] EP, int[] IP, int[] IP_1)
-        {
-            string path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"Data\Permutations.txt");
-            var reader = new StreamReader(path);
-            string linea = reader.ReadLine();
-            string[]PACTUAL = linea.Split(',');
-
-            foreach (string s in PACTUAL)
-            {
-                int num = Convert.ToInt32(s);
-                P10.Append(num);
-            }
-
-            linea = reader.ReadLine();
-            PACTUAL = linea.Split(',');
-            foreach (string s in PACTUAL)
-            {
-                int num = Convert.ToInt32(s);
-                P8.Append(num);
-            }
-
-        }
         
-        public static int[] P10;
-        public static int[] P8;
-        public static int[] P4;
-        public static int[] EP;
-        public static int[] IP;
-        public static int[] IP_1;
-
-
-
-
-
-
 
         [HttpPost("sdes/cipher/{name}")]
         
@@ -173,15 +135,15 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
 
 
             byte[] bytes;
-           
-
+; 
+         
             using (var memory = new MemoryStream())
             {
                 await File.CopyToAsync(memory);
-
+             
             
                 bytes = memory.ToArray();
-                List<byte> aux = bytes.OfType<byte>().ToList();
+              
              
              }
             var SDES = new SDES();
@@ -261,7 +223,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
 
 
                 bytes = memory.ToArray();
-                List<byte> aux = bytes.OfType<byte>().ToList();
+              
 
             }
             var SDES = new SDES();
