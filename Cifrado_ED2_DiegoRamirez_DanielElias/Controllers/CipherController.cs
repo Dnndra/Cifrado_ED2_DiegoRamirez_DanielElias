@@ -22,6 +22,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
     [ApiController]
     public class CipherController : ControllerBase
     {
+        public static string NombreOriginalActual;
         // GET: api/<CipherController>
         [HttpGet]
         public IEnumerable<string> Get()
@@ -147,17 +148,18 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
              
              }
             var SDES = new SDES();
+            NombreOriginalActual = File.FileName;
 
            List<byte> final= SDES.Cypher(Key ,bytes, P4,EP,IP,IP_1,P10,P8);
 
 
-            return base.File(final.ToArray(), "text / plain", name + ".txt");
+            return base.File(final.ToArray(), "compressedFile    / sdes", name + ".sdes");
 
           }
 
-        [HttpPost("sdes/decipher/{name}")]
+        [HttpPost("sdes/decipher")]
 
-        public async Task<FileResult> DecipherSDES([FromRoute] string name, [FromForm] IFormFile File, [FromForm] string Key)
+        public async Task<FileResult> DecipherSDES([FromForm] IFormFile File, [FromForm] string Key)
         {
             //LEER PERMUTACIONES
             int[] P10 = new int[10];
@@ -229,9 +231,9 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
             var SDES = new SDES();
 
             List<byte> final = SDES.Decypher(Key, bytes, P4, EP, IP, IP_1,P10,P8);
-
+            string[] nombreArchivo = NombreOriginalActual.Split('.');
      
-            return base.File(final.ToArray(), "text / plain", name + ".txt");
+            return base.File(final.ToArray(), "text / plain", nombreArchivo[0]+".txt" );
 
         }
 
