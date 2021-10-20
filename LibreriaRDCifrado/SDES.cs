@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LibreriaRDCifrado
 {
-    public  class SDES
+    public  class SDES : IEncriptador
     {
 
         public string LeftShift1(string cadena)
@@ -421,6 +421,16 @@ namespace LibreriaRDCifrado
 
 
             return Mensajecifrado;
+        }
+
+        public string Cipher(string mensaje, string clave)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string Decipher(string mensaje, string clave)
+        {
+            throw new NotImplementedException();
         }
     }
 }

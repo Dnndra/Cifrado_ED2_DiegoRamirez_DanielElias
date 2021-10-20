@@ -100,5 +100,10 @@ namespace LibreriaRDCifrado
 
             return mensajeFinal;
         }
+
+        public string[] GenerarLlave(string llave, int[] P10, int[] P8)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

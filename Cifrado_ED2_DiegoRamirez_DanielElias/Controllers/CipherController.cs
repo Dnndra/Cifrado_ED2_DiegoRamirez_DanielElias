@@ -77,7 +77,18 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
         
           public async Task<FileResult> CipherSDES([FromRoute] string name, [FromForm] IFormFile File, [FromForm] string Key)
         {
+            try
+            {
+                if (Convert.ToInt32(Key) > 1023)
+                {
+                    return default;
+                }
+            }
+            catch
+            {
 
+            }
+         
             //LEER PERMUTACIONES
             int[] P10 = new int[10];
             int[] P8 = new int[8];
@@ -161,6 +172,17 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
 
         public async Task<FileResult> DecipherSDES([FromForm] IFormFile File, [FromForm] string Key)
         {
+            try
+            {
+                if (Convert.ToInt32(Key) > 1023)
+                {
+                    return default;
+                }
+            }
+            catch
+            {
+
+            }
             //LEER PERMUTACIONES
             int[] P10 = new int[10];
             int[] P8 = new int[8];
@@ -247,6 +269,7 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
         [HttpPost("decipher")]
         public async Task<FileResult> DecipherAsync([FromForm] IFormFile File, [FromForm] string Key)
         {
+          
 
             byte[] bytes;
             var cesar = new CifradoCesar();
