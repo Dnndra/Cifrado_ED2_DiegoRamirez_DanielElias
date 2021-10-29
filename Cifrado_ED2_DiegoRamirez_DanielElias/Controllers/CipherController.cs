@@ -260,8 +260,26 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
         }
 
 
+        [HttpPost("rsa/{name}/{p}/{q}")]
+        public async Task<FileResult> RSA([FromForm] IFormFile File, [FromRoute] string name, [FromRoute] string p, [FromRoute] string q)
+        {
+            byte[] bytes;
+            var RSA = new RSA();
+
+            using (var memory = new MemoryStream())
+            {
+                await File.CopyToAsync(memory);
 
 
+                bytes = memory.ToArray();
+
+
+            }
+            List<int> llaves = RSA.GenerarLlaves(Convert.ToInt32(p), Convert.ToInt32(q));
+            byte[] mensaje = RSA.RSA_ALGORITHM(bytes, llaves);
+            return base.File(mensaje, "text/ plain", name + ".txt");
+
+        }
 
 
 
