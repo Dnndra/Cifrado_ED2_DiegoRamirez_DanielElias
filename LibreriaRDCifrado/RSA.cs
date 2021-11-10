@@ -8,7 +8,7 @@ using System.Buffers.Binary;
 
 namespace LibreriaRDCifrado
 {
-  public  class RSA
+  public  class RSA : IEncriptador
     {
        public string public_key;
         public string private_key;
@@ -28,7 +28,11 @@ namespace LibreriaRDCifrado
             }
             int e = i;
             int d = calcularD(e, Fi_n);
+            if (e == d)
+            {
+                e = e + n;
 
+            }
              public_key = Convert.ToString(e) + "," + Convert.ToString(n);
              private_key = Convert.ToString(d) + "," + Convert.ToString(n);
 
@@ -131,8 +135,19 @@ namespace LibreriaRDCifrado
             return rv;
         }
 
+        public string Cipher(string mensaje, string clave)
+        {
+            throw new NotImplementedException();
+        }
 
+        public string Decipher(string mensaje, string clave)
+        {
+            throw new NotImplementedException();
+        }
 
-
+        public string[] GenerarLlave(string llave, int[] P10, int[] P8)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

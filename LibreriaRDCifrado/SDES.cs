@@ -432,5 +432,15 @@ namespace LibreriaRDCifrado
         {
             throw new NotImplementedException();
         }
+
+        public byte[] RSA_CYPHER(byte[] mensaje, int n, int k)
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] RSA_DECYPHER(byte[] mensaje, int n, int k)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
