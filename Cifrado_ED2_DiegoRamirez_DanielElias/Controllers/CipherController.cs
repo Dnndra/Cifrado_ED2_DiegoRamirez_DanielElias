@@ -37,6 +37,53 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
             return "value";
         }
 
+        [HttpGet("rsa/keys/{p}/{q}")]
+        public ActionResult Llaves([FromRoute] string p, [FromRoute] string q)
+        {
+            var RSA = new RSA();
+
+            string workingDirectory = Environment.CurrentDirectory;
+            string pathFolderActual = Directory.GetParent(workingDirectory).FullName;
+            string pathDirectoryKeys = pathFolderActual + "\\Keys\\";
+            string rutaKeyPublica = "";
+            string rutaKeyPrivada = "";
+
+            rutaKeyPublica = pathDirectoryKeys + "public.key";
+
+            if (Directory.Exists(pathDirectoryKeys))
+            {
+                Directory.Delete(pathDirectoryKeys, true);
+            }
+            Directory.CreateDirectory(pathDirectoryKeys);
+            if (RSA.EsPrimo(Convert.ToInt32(p)) == true && RSA.EsPrimo(Convert.ToInt32(q)) == true && Convert.ToInt32(p) * Convert.ToInt32(q) > 256 && Convert.ToInt32(p) * Convert.ToInt32(q) < Int32.MaxValue)
+            {
+
+
+                RSA.GenerarLlaves(Convert.ToInt32(p), Convert.ToInt32(q));
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                rutaKeyPublica = pathDirectoryKeys + "public.key";
+                System.IO.File.WriteAllBytes(rutaKeyPublica, System.Text.Encoding.UTF8.GetBytes(RSA.public_key));
+                rutaKeyPrivada = pathDirectoryKeys + "private.key";
+                System.IO.File.WriteAllBytes(rutaKeyPrivada, System.Text.Encoding.UTF8.GetBytes(RSA.private_key));
+
+                using (ZipFile zip = new ZipFile())
+                {
+                    zip.AddEntry("public.key", System.IO.File.ReadAllBytes(rutaKeyPublica));
+                    zip.AddEntry("private.key", System.IO.File.ReadAllBytes(rutaKeyPrivada));
+
+                    using (MemoryStream output = new MemoryStream())
+                    {
+                        zip.Save(output);
+                        //dar send and download para escoger la ruta o esta en la carpeta del proyecto
+                        return File(output.ToArray(), "application/ zip", "keys.zip");
+                    }
+                }
+            }
+            Response.Clear();
+            Response.StatusCode = 500; return Content("Error!" + "\n" + "P y Q tienen que ser numeros primos y el producto de estos dos mayor a 256");
+
+        }
+
         // POST api/<CipherController>
         [HttpPost("cipher/{method}")]
         public async Task<FileResult> Cipher([FromRoute] string method, [FromForm] IFormFile File, [FromForm] string Key)

@@ -52,11 +52,31 @@ namespace LibreriaRDCifrado
             return Combine(identificar,mensajefinal);
 
         }
+        public byte[] RSA_DECYPHER(byte[] mensaje, int n, int k)
+        {
 
-     
-      
+            mensaje = mensaje.Skip(1).ToArray();
 
-       
+            var numerosmensaje = new int[mensaje.Length / 4];
+            Buffer.BlockCopy(mensaje, 0, numerosmensaje, 0, mensaje.Length);
+
+            List<byte> mensajedescifrado = new List<byte>();
+
+            foreach (int b in numerosmensaje)
+            {
+
+                int cifrado = (int)BigInteger.ModPow(b, n, k);
+
+                mensajedescifrado.Add((byte)cifrado);
+            }
+
+            return mensajedescifrado.ToArray();
+        }
+
+
+
+
+
         static int calcularD(int a, int m)
         {
 
