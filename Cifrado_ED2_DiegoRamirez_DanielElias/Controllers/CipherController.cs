@@ -8,16 +8,16 @@ using System.IO;
 using LibreriaRDCifrado;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
-using System.Text.Json;
-using System.Web;
-using System.Net;
+using Ionic.Zip;
+using System.IO.Compression;
 using System.Net.Http.Headers;
-using System.Reflection;
-
+using System.Net.Http;
+using ZipFile = Ionic.Zip.ZipFile;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
 {
+  
     [Route("api")]
     [ApiController]
     public class CipherController : ControllerBase
@@ -258,26 +258,46 @@ namespace Cifrado_ED2_DiegoRamirez_DanielElias.Controllers
             return base.File(final.ToArray(), "text / plain", nombreArchivo[0]+".txt" );
 
         }
-
-
-        [HttpPost("rsa/{name}/{p}/{q}")]
-        public async Task<FileResult> RSA([FromForm] IFormFile File, [FromRoute] string name, [FromRoute] string p, [FromRoute] string q)
+  
+       
+   
+       
+       
+        [HttpPost("rsa/{name}")]
+        public async Task<FileResult> RSA([FromForm] IFormFile File, [FromForm] IFormFile File2, [FromRoute] string name)
         {
             byte[] bytes;
-            var RSA = new RSA();
+            var reader = new StreamReader(File2.OpenReadStream());
+            var RSA= new RSA();
+            string linea = reader.ReadLine();
+            string[] llave = linea.Split(',');
+            string ORIGINALFILENAME = File2.FileName;
 
             using (var memory = new MemoryStream())
             {
                 await File.CopyToAsync(memory);
-
-
+                
                 bytes = memory.ToArray();
 
 
             }
-            List<int> llaves = RSA.GenerarLlaves(Convert.ToInt32(p), Convert.ToInt32(q));
-            byte[] mensaje = RSA.RSA_ALGORITHM(bytes, llaves);
-            return base.File(mensaje, "text/ plain", name + ".txt");
+           
+            if (bytes[0] == 0)
+            {
+              
+                byte[] mensaje = RSA.RSA_DECYPHER(bytes, Convert.ToInt32(llave[0]), Convert.ToInt32(llave[1]));
+
+                return base.File(mensaje, "text/ plain", name + ".txt");
+            }
+            else 
+            {
+                byte[] mensaje = RSA.RSA_CYPHER(bytes, Convert.ToInt32(llave[0]), Convert.ToInt32(llave[1]));
+
+                return base.File(mensaje, "text/ plain", name + ".txt");
+            }
+
+
+            return null;
 
         }
 
